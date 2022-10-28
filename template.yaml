@@ -32,7 +32,7 @@ Resources:
   LambdaStateMachine:
     Type: AWS::Serverless::StateMachine # More info about State Machine Resource: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-statemachine.html
     Properties:
-      DefinitionUri: statemachine/Lambda_State_Machine_EL.asl.json
+      DefinitionUri: statemachine/Lambda_State_Machine_EH.asl.json
       Role: !GetAtt StateMachineRole.Arn
       DefinitionSubstitutions:
         AddFunctionArn: !Ref AddFunction

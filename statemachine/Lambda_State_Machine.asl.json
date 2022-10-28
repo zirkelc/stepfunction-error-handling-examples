@@ -1,83 +1,82 @@
 {
-    "Comment": "CalculationStateMachine",
-    "StartAt": "CleanInput",
-    "States": {
-      "CleanInput": {
-        "Type": "Task",
-        "Resource": "arn:aws:states:::lambda:invoke",
-        "Parameters": {
-          "FunctionName": "${CleanFunctionArn}",
-          "Payload": {
-            "input.$": "$"
-          }
-        },
-        "Next": "Multiply"
+  "Comment": "CalculationStateMachine",
+  "StartAt": "CleanInput",
+  "States": {
+    "CleanInput": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${CleanFunctionArn}",
+        "Payload": {
+          "input.$": "$"
+        }
       },
-      "Multiply": {
-        "Type": "Task",
-        "Resource": "arn:aws:states:::lambda:invoke",
-        "Parameters": {
-          "FunctionName": "${MultiplyFunctionArn}",
-          "Payload": {
-            "input.$": "$.Payload"
-          }
-        },
-        "Next": "Choice"
+      "Next": "Multiply"
+    },
+    "Multiply": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${MultiplyFunctionArn}",
+        "Payload": {
+          "input.$": "$.Payload"
+        }
       },
-      "Choice": {
-        "Type": "Choice",
-        "Choices": [
-          {
-            "Variable": "$.Payload.result",
-            "NumericGreaterThanEquals": 20,
-            "Next": "Subtract"
-          }
-        ],
-        "Default": "Notify"
+      "Next": "Choice"
+    },
+    "Choice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.Payload.result",
+          "NumericGreaterThanEquals": 20,
+          "Next": "Subtract"
+        }
+      ],
+      "Default": "Notify"
+    },
+    "Subtract": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${SubtractFunctionArn}",
+        "Payload": {
+          "input.$": "$.Payload"
+        }
       },
-      "Subtract": {
-        "Type": "Task",
-        "Resource": "arn:aws:states:::lambda:invoke",
-        "Parameters": {
-          "FunctionName": "${SubtractFunctionArn}",
-          "Payload": {
-            "input.$": "$.Payload"
-          }
-        },
-        "Next": "Add"
+      "Next": "Add"
+    },
+    "Add": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${AddFunctionArn}",
+        "Payload": {
+          "input.$": "$.Payload"
+        }
       },
-      "Add": {
-        "Type": "Task",
-        "Resource": "arn:aws:states:::lambda:invoke",
-        "Parameters": {
-          "FunctionName": "${AddFunctionArn}",
-          "Payload": {
-            "input.$": "$.Payload"
-          }
-        },
-        "Next": "Divide"
+      "Next": "Divide"
+    },
+    "Divide": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${DivideFunctionArn}",
+        "Payload": {
+          "input.$": "$.Payload"
+        }
       },
-      "Divide": {
-        "Type": "Task",
-        "Resource": "arn:aws:states:::lambda:invoke",
-        "Parameters": {
-          "FunctionName": "${DivideFunctionArn}",
-          "Payload": {
-            "input.$": "$.Payload"
-          }
-        },
-        "End": true
+      "End": true
+    },
+    "Notify": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn": "arn:aws:sns:us-east-1:0123456789:CalculateNotify",
+        "Message.$": "$$",
+        "Subject": "Failed Test"
       },
-      "Notify": {
-        "Type": "Task",
-        "Resource": "arn:aws:states:::sns:publish",
-        "Parameters": {
-          "TopicArn": "arn:aws:sns:us-east-1:0123456789:CalculateNotify",
-          "Message.$": "$$",
-          "Subject": "Failed Test"
-        },
-        "End": true
-      }
+      "End": true
     }
   }
-  
+}

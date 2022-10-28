@@ -1,0 +1,11 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "sam-app"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-y8tdxguqva9i"
+s3_prefix = "sam-app"
+region = "eu-west-1"
+capabilities = "CAPABILITY_NAMED_IAM"
+parameter_overrides = "CleanInputFunctionName=\"CleanInput\" MultiplyFunctionName=\"Multiply\" AddFunctionName=\"Add\" SubtractFunctionName=\"Subtract\" DivideFunctionName=\"Divide\" NotificationEmail=\"chris.zirkel@gmail.com\""
+image_repositories = []
